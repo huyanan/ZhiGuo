@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>月光石店奖积分系统</title>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+</head>
+<body>
+<h1>{$user->name}</h1>
+<form action="/update_info/{$user->id}" method="post">
+	<input type="text" name="name" value="{$user->name ? $user->name : ''}">
+	<input type="text" name="telephone" value="{$user->telephone ? $user->telephone : ''}">
+	<input type="submit" value="保存">
+</form>
+
+<button id="saoma">扫码</button>
+<script>
+	var jsSign = {$jsSign};
+	wx.config({
+	    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	    appId: jsSign.appId, // 必填，公众号的唯一标识
+	    timestamp: jsSign.timestamp, // 必填，生成签名的时间戳
+	    nonceStr: jsSign.nonceStr, // 必填，生成签名的随机串
+	    signature: jsSign.signature,// 必填，签名，见附录1
+	    jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	});
+
+	wx.ready(function(){
+	    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+	    window.alert('js sdk 验证成功')
+	});
+	// var weixin = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe21837cd367991d&redirect_uri=' + encodeURI('http://yueguangshi.com.cn/home') + '&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
+
+	// var weixin = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&redirect_uri=https%3A%2F%2Fchong.qq.com%2Fphp%2Findex.php%3Fd%3D%26c%3DwxAdapter%26m%3DmobileDeal%26showwxpaytitle%3D1%26vb2ctag%3D4_2030_5_1194_60&response_type=code&scope=snsapi_base&state=123#wechat_redirect';
+	// window.location.href = weixin;
+	$(function() {
+		$('#saoma').on('click', function(event) {
+			event.preventDefault();
+			wx.scanQRCode({
+			    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+			    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+			    success: function (res) {
+				    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+				    window.alert(res)
+				}
+			});
+		});
+	})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+.idea
+composer.lock
+*.log
+thinkphp
+vendor
+sftp-config.json
+_gsdata_
