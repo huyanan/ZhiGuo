@@ -1,4 +1,3 @@
-
 <section id="content">
 
     <div class="page page-fullwidth-layout">
@@ -42,9 +41,7 @@
 
                             <form role="form" enctype="multipart/form-data" action="{:url($data.module_url)}" method="GET">
                                 <div class="row">
-                                    <div class="col-sm-3"><input class="form-control" name="title" value="{if (isset($data['search']) AND isset($data['search']['title']) )}{$data['search']['title']}{/if}" placeholder="文章标题"></div>
-                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD" name="start_time" value="{if (isset($data['search']) AND isset($data['search']['start_time']) )}{$data['search']['start_time']}{/if}" placeholder="创建日期起始时间"></div>
-                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD" name="end_time" value="{if (isset($data['search']) AND isset($data['search']['end_time']) )}{$data['search']['end_time']}{/if}" placeholder="创建日期结束时间"></div>
+                                    <div class="col-sm-3"><input class="form-control" name="name" value="{if (isset($data['search']) AND isset($data['search']['name']) )}{$data['search']['name']}{/if}" placeholder="公司名"></div>
                                     <div class="col-sm-3"><button class="btn btn-info btn-block" type="submit">提交</button></div>
                                 </div>
                             </form>
@@ -84,12 +81,7 @@
                                     <tr>
                                         <!--<th width="300">标题</th>-->
                                         <th>ID</th>
-                                        <th>姓名</th>
-                                        <th>手机号</th>
-                                        <th>公司</th>
-                                        <th>店铺</th>
-                                        <th>省</th>
-                                        <th>市</th>
+                                        <th>公司名</th>
                                         <th>创建时间</th>
                                         <!--<th>更新时间</th>-->
                                         <th>操作</th>
@@ -102,11 +94,6 @@
                                     <tr id="tr_{$item->id}">
                                         <td>{$item->id}</td>
                                         <td>{$item->name}</td>
-                                        <td>{$item->telephone}</td>
-                                        <td>{$item->company_name}</td>
-                                        <td>{$item->store ? $item->store->name : ''}</td>
-                                        <td>{$item->province}</td>
-                                        <td>{$item->city}</td>
                                         <td>{$item->created_at}</td>
                                         <td>
 
@@ -114,7 +101,7 @@
                                                 <i class="glyphicon glyphicon-edit icon-white"></i>
                                                 编辑
                                             </a>
-                                            <a class="btn btn-danger" href="javascript:;"  onclick="if(confirm('确定要删除该文章吗')){ deleteData({$item->id})}">
+                                            <a class="btn btn-danger" href="javascript:;"  onclick="if(confirm('确定要删除该客户吗')){ deleteData({$item->id})}">
                                                 <i class="glyphicon glyphicon-trash icon-white"></i>
                                                 删除
                                             </a>
@@ -181,4 +168,3 @@
 
 </section>
 <!--/ CONTENT -->
-

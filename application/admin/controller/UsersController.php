@@ -8,7 +8,9 @@ use think\Model;
 
 use think\Validate;
 use app\admin\model\Users;
+use app\admin\model\Companys;
 use app\admin\model\Stores;
+
 
 //权限认证
 class UsersController extends Controller {
@@ -51,10 +53,10 @@ class UsersController extends Controller {
         *   或者可以取消属性读取器，用关联查询，但是由于没有设置属性读取器，
         *   在 create/read 页面,select/checkbox/radio字段默认值判断时不对，需要单独设置默认值
         */
-        // $list =  Posts::view('posts','*')
-        //                 ->view('administrator',['nickname'],'posts.post_author=administrator.id') //这里本人对关联查询写法不熟，手册中关联查询部分没有完整实例，试了几种方法（join(),model定义关联），最后用view写
-        //                 ->where('posts.status','>=','0')
-        //                 ->order('posts.create_time', 'DESC')
+        // $list =  Users::view('users','*')
+        //                 ->view('administrator',['nickname'],'users.post_author=administrator.id') //这里本人对关联查询写法不熟，手册中关联查询部分没有完整实例，试了几种方法（join(),model定义关联），最后用view写
+        //                 ->where('users.status','>=','0')
+        //                 ->order('users.create_time', 'DESC')
         //                 ->paginate();
 
         //直接查询,注：getPostAuthorAttr 中已经得到了 post_author 名称
@@ -165,20 +167,35 @@ class UsersController extends Controller {
      */
     public function read($id='')
     {
+        $companys = Companys::where('id', '<>', '-1')->column('name', 'id');
+        // $stores = Stores::where('id', '<>', '-1')->column('name', 'id');
+
+        $stores = Stores::where('id', '<>', '-1')->select();
+        $stores_map = [];
+        foreach ($stores as $skey => $store) {
+            if (!isset($stores_map[$store->company_name])) {
+                $stores_map[$store->company_name] = [];
+            }
+            $stores_map[$store->company_name][] = $store;
+        }
+
         $this->data['edit_fields'] = array(
             'name'     => array('type' => 'text', 'label' => '姓名'),
             'telephone'   => array('type' => 'text', 'label' => '手机号'),
-            'store_id'   => array('type' => 'text', 'label' => '实体店'),
-            'province'  => array('type' => 'text','label'     => '省'),
-            'city'         => array('type' => 'text','label'     => '市'),
+            // 'company_name'    => array('type' => 'select', 'label' => '公司名','default' => $companys, 'extra'=>array('wrapper'=>'col-sm-4')),
+            // 'store_id'    => array('type' => 'select', 'label' => '店面名','default' => $stores, 'extra'=>array('wrapper'=>'col-sm-4')),
+            // 'province'  => array('type' => 'text','label'     => '省'),
+            // 'city'         => array('type' => 'text','label'     => '市'),
         );
 
         //默认值设置
         $item = Users::get($id);
 //        $item['post_content'] = str_replace('&', '&amp;', $item['post_content']);
-
         $this->assign('item',$item);
         $this->assign('data',$this->data);
+        $this->assign('companys', $companys);
+        $this->assign('stores', $stores);
+        $this->assign('stores_map', json_encode($stores_map));
 
         return view();
     }
@@ -190,15 +207,14 @@ class UsersController extends Controller {
      */
     public function update($id)
     {
-        $posts = new Posts;
+        $users = Users::get($id);
         $data = input('post.');
-
         $rule = [
             //字段验证
-            'post_title|文章标题' => 'require',
-            'status|文章状态' => 'require',
-            'post_author|文章作者' => 'require',
-            'comment_status|评论开关' => 'require',
+            // 'post_title|文章标题' => 'require',
+            // 'status|文章状态' => 'require',
+            // 'post_author|文章作者' => 'require',
+            // 'comment_status|评论开关' => 'require',
         ];
         $msg = [];
 
@@ -216,10 +232,24 @@ class UsersController extends Controller {
             unset($data['feature_image']);
         }
 
-        if ($posts->update($data)) {
-            return $this->success('信息更新成功',$this->data['module_url'].$id);
+        if ($users->update($data)) {
+            return $this->success('信息更新成功',$this->data['module_url']);
         } else {
-            return $posts->getError();
+            return $users->getError();
+        }
+    }
+
+    public function updateById($id)
+    {
+        $users = Users::get($id);
+        $data = input('post.');
+        
+        $data['id'] = $id;
+
+        if ($users->update($data)) {
+            return $this->success('信息更新成功','/');
+        } else {
+            return $users->getError();
         }
     }
 
@@ -285,48 +315,38 @@ class UsersController extends Controller {
      */
     public function delete($id)
     {
-        $posts = new Posts;
-        $data['id'] = $id;
-        $data['status'] = -1;
-        if ($posts->update($data)) {
-            $data['error'] = 0;
-            $data['msg'] = '删除成功';
-        } else {
-            $data['error'] = 1;
-            $data['msg'] = '删除失败';
-        }
-        return $data;
 
         // 真.删除，不想用伪删除，请用这段(TODO：增加回收站功能用，在回收站清空时用真删除)
-        // $posts = Posts::get($id);
-        // if ($posts) {
-        //     $posts->delete();
-        //     $data['error'] = 0;
-        // 	$data['msg'] = '删除成功';
-        // } else {
-        // 	$data['error'] = 1;
-        // 	$data['msg'] = '删除失败';
-        // }
-        // return $data;
+        $users = Users::get($id);
+        if ($users) {
+            $users->delete();
+            $data['id'] = $users->id;
+            $data['error'] = 0;
+        	$data['msg'] = '删除成功';
+        } else {
+        	$data['error'] = 1;
+        	$data['msg'] = '删除失败';
+        }
+        return $data;
     }
 
     public function delete_image($id){
-        $posts = Posts::get($id);
-        if (file_exists($this->data['upload_path'] .'/'. $posts->feature_image)) {
-            @unlink($this->data['upload_path'] .'/'. $posts->feature_image);
+        $users = Users::get($id);
+        if (file_exists($this->data['upload_path'] .'/'. $users->feature_image)) {
+            @unlink($this->data['upload_path'] .'/'. $users->feature_image);
         }
 
-        $source_image = str_replace('_thumb', '', $posts->feature_image);
+        $source_image = str_replace('_thumb', '', $users->feature_image);
         if (file_exists($this->data['upload_path'] .'/'. $source_image)) {
             @unlink($this->data['upload_path'] .'/'. $source_image);
         }
 
         $data['id'] = $id;
         $data['feature_image'] = '';
-        if ($posts->update($data)) {
+        if ($users->update($data)) {
             return $this->success('图像删除成功',$this->data['module_url'].$id);
         }else{
-            return $posts->getError();
+            return $users->getError();
         }
 
 

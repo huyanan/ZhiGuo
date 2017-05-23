@@ -4,6 +4,8 @@ namespace app\index\controller;
 use think\Controller;
 use think\Db;
 use app\admin\model\Users;
+use app\admin\model\Companys;
+use app\admin\model\Stores;
 
 class IndexController extends Controller
 {
@@ -13,11 +15,25 @@ class IndexController extends Controller
             $url = config('site_url') . 'weixinauth';
             header("Location: " . $url);
         } else {
+            $companys = Companys::where('id', '<>', '-1')->column('name', 'id');
             $user = Users::get(['weixin_openid' => session('w_uid')]);
+            // $stores = Stores::where('id', '<>', '-1')->column('name', 'id', 'company_name');
+            $stores = Stores::where('id', '<>', '-1')->select();
+            $stores_map = [];
+            foreach ($stores as $skey => $store) {
+                if (!isset($stores_map[$store->company_name])) {
+                    $stores_map[$store->company_name] = [];
+                }
+                $stores_map[$store->company_name][] = $store;
+            }
+
             $wechat = wechat();
             $jsSign = $wechat->getJsSign(get_url());
     	    return view('index', [
                 'user' => $user,
+                'companys' => $companys,
+                'stores' => $stores,
+                'stores_map' => json_encode($stores_map),
                 'jsSign' => json_encode($jsSign)
             ]);
         }
@@ -44,7 +60,6 @@ class IndexController extends Controller
             //     .u('snsapi_userinfo').'&state=STATE#wechat_redirect';
 
             header("Location: " . $url );
-            return;
         }
         else
         {
@@ -76,11 +91,7 @@ class IndexController extends Controller
     	}
     	$user->save();
         session('w_uid', $user->weixin_openid);
-        try{
-            session_start();
-        } catch (Exception $e) {
-        }
-    	header("Location: ".config('client_url')."?token=".session_id('w_uid') );
+    	header("Location: ".config('client_url'));
 
     }
 

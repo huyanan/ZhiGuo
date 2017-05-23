@@ -173,7 +173,7 @@ function is_login() {
 	// var_dump(session('w_uid'));
 	// exit;
 	// return isset(session('w_uid')) &&  intval(session('w_uid')) > 0;
-	return !!session('w_uid');
+	return session('?w_uid');
 }
 
 // 获取wechat
@@ -206,3 +206,54 @@ function get_url() {
     $relate_url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $php_self.(isset($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : $path_info);
     return $sys_protocal.(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '').$relate_url;
 }
+
+
+/**
+ * Simple function to replicate PHP 5 behaviour
+ */
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
+
+function gen_uuid() {
+    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        // 32 bits for "time_low"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+        // 16 bits for "time_mid"
+        mt_rand( 0, 0xffff ),
+
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        mt_rand( 0, 0x0fff ) | 0x4000,
+
+        // 16 bits, 8 bits for "clk_seq_hi_res",
+        // 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        mt_rand( 0, 0x3fff ) | 0x8000,
+
+        // 48 bits for "node"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+    );
+}
+
+function unlink_dir($path) {
+    $_path = realpath($path);
+    if (!file_exists($_path)) return false;
+    if (is_dir($_path)) {
+        $list = scandir($_path);
+        foreach ($list as $v) {
+            if ($v == '.' || $v == '..') continue;
+            $_paths = $_path.'/'.$v;
+            if (is_dir($_paths)) {
+                unlink_dir($_paths);
+            } elseif (unlink($_paths) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return !is_file($_path) ? false : unlink($_path);
+ }

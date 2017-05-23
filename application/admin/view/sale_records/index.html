@@ -42,7 +42,45 @@
 
                             <form role="form" enctype="multipart/form-data" action="{:url($data.module_url)}" method="GET">
                                 <div class="row">
+                                    <div class="col-sm-3 form-group">
+                                        <label>公司名</label>
+
+                                        <select  name="company_name"
+                                            class="form-control" style="max-width: 300px;">
+                                                <option value="">请选择</option>
+                                                {foreach $companys as $ov => $ol }
+                                                    <option value="{$ol}" {if isset($data['search']['company_name']) AND $data['search']['company_name'] == $ol}selected="selected"{/if}>{$ol}</option>
+                                                {/foreach}
+                                        </select>
+
+                                    </div>
+                                    <div class="col-sm-3 form-group">
+                                        <label>店面名</label>
+
+                                        <select  name="store_name"
+                                            class="form-control" style="max-width: 300px;">
+                                                <option value="">请选择</option>
+                                                {foreach $stores as $ov => $ol }
+                                                    <option value="{$ol}" {if isset($data['search']['store_name']) AND $data['search']['store_name'] == $ol}selected="selected"{/if}>{$ol}</option>
+                                                {/foreach}
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3"><input class="form-control" name="name" value="{if (isset($data['search']) AND isset($data['search']['name']) )}{$data['search']['name']}{/if}" placeholder="销售员姓名"></div>
+                                    <div class="col-sm-3"><input class="form-control" name="telephone" value="{if (isset($data['search']) AND isset($data['search']['telephone']) )}{$data['search']['telephone']}{/if}" placeholder="销售员手机号"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><input class="form-control" name="goods_name" value="{if (isset($data['search']) AND isset($data['search']['goods_name']) )}{$data['search']['goods_name']}{/if}" placeholder="货物名称"></div>
+                                    <div class="col-sm-3"><input class="form-control" name="goods_type" value="{if (isset($data['search']) AND isset($data['search']['goods_type']) )}{$data['search']['goods_type']}{/if}" placeholder="货物型号"></div>
+                                    <div class="col-sm-3"><input class="form-control" name="goods_number" value="{if (isset($data['search']) AND isset($data['search']['goods_number']) )}{$data['search']['goods_number']}{/if}" placeholder="货物编号"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" name="start_time" value="{if (isset($data['search']) AND isset($data['search']['start_time']) )}{$data['search']['start_time']}{/if}" placeholder="创建日期起始时间"></div>
+                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" name="end_time" value="{if (isset($data['search']) AND isset($data['search']['end_time']) )}{$data['search']['end_time']}{/if}" placeholder="创建日期结束时间"></div>
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3"><button class="btn btn-info btn-block" type="submit">提交</button></div>
                                 </div>
                             </form>
@@ -84,7 +122,10 @@
                                         <th>ID</th>
                                         <th>销售员姓名</th>
                                         <th>手机号</th>
+                                        <th>货物名称</th>
+                                        <th>货物型号</th>
                                         <th>货物编号</th>
+                                        <th>公司名</th>
                                         <th>店名</th>
                                         <th>省</th>
                                         <th>市</th>
@@ -101,23 +142,26 @@
                                         <td>{$item->id}</td>
                                         <td>{$item->name}</td>
                                         <td>{$item->telephone}</td>
+                                        <td>{$item->goods_name}</td>
+                                        <td>{$item->goods_type}</td>
                                         <td>{$item->goods_number}</td>
+                                        <td>{$item->company_name}</td>
                                         <td>{$item->store_name}</td>
                                         <td>{$item->province}</td>
                                         <td>{$item->city}</td>
                                         <td>{$item->created_at}</td>
-                                        <!--<td>-->
+                                        <td>
 
-                                            <!--<a class="btn btn-info" href="{:url($data.module_url.$item->id)}">-->
-                                                <!--<i class="glyphicon glyphicon-edit icon-white"></i>-->
-                                                <!--编辑-->
-                                            <!--</a>-->
-                                            <!--<a class="btn btn-danger" href="javascript:;"  onclick="if(confirm('确定要删除该店吗')){ deleteData({$item->id})}">-->
-                                                <!--<i class="glyphicon glyphicon-trash icon-white"></i>-->
-                                                <!--删除-->
-                                            <!--</a>-->
+                                            <a class="btn btn-info" href="{:url($data.module_url.$item->id)}">
+                                                <i class="glyphicon glyphicon-edit icon-white"></i>
+                                                编辑
+                                            </a>
+                                            <a class="btn btn-danger" href="javascript:;"  onclick="if(confirm('确定要删除该销售记录吗')){ deleteData({$item->id})}">
+                                                <i class="glyphicon glyphicon-trash icon-white"></i>
+                                                删除
+                                            </a>
 
-                                        <!--</td>-->
+                                        </td>
                                     </tr>
                                     {/foreach}
                                     {/if}

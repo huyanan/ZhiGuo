@@ -173,7 +173,7 @@ class PostsController extends AdminAuth
         $this->data['edit_fields'] = array(
             'post_title'     => array('type' => 'text', 'label' => '标题'),
             'post_excerpt'   => array('type' => 'textarea', 'label' => '摘要'),
-            'post_content'   => array('type' => 'textarea', 'label' => '内容'),
+            'post_content'   => array('type' => 'textarea', 'label' => '内容','id'=>'ckeditor_post_content'),
             'feature_image'  => array('type' => 'file','label'     => '特色图片'),
             'status'         => array('type' => 'radio', 'label' => '状态','default'=> array(-1 => '删除', 0 => '草稿', 1 => '发布',2 => '待审核')),
             'hr1'            => array('type' => 'hr'),
@@ -250,9 +250,26 @@ class PostsController extends AdminAuth
 	            $this->error('请选择图像文件');
 	        } else {
 	        	$info = $file->rule('uniqid')->move(ROOT_PATH . 'public' . DS . 'uploads'); //保存原图
+                // if($info){
+                //     // 成功上传后 获取上传信息
+                //     // 输出 jpg
+                //     echo $info->getExtension();
+                //     // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
+                //     echo $info->getSaveName();
+                //     // 输出 42a79759f284b767dfcb2a0197904287.jpg
+                //     echo $info->getFilename(); 
 
+                //     echo '---------------';
+                //     echo $info->isFile();
+                //     echo '---------------';
+                //     echo $info->isDir();
+                // }else{
+                //     // 上传失败获取错误信息
+                //     echo $file->getError();
+                // }
+                // exit;
 	            // 读取图片
-	            $image = Image::open($file);
+	            $image = Image::open($info);
 	            // 图片处理
 	            $image_type = request()->param('type') ? request()->param('type') : 1;
 	            switch ($image_type) {

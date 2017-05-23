@@ -3,11 +3,11 @@ namespace app\admin\model;
 
 use think\Model;
 
-class SaleRecords extends Model
+class Companys extends Model
 {
 
     // 设置完整的数据表（包含前缀）
-    protected $table = 'sale_records';
+    protected $table = 'companys';
 
     // 关闭自动写入时间戳
     //protected $autoWriteTimestamp = false;
@@ -27,9 +27,10 @@ class SaleRecords extends Model
         'updated_at',
     ];
 
+    protected $update = ['updated_at'];
+    // 定义时间戳字段名
     protected $createTime = 'created_at';
     protected $updateTime = 'updated_at';
-    protected $update = ['updated_at'];
 
     // status属性读取器
 //    protected function getStatusAttr($value)

@@ -36,15 +36,35 @@ return [
     'admin/posts/delete/:id'                     => 'admin/posts/delete',
     'admin/posts/delete_image/:id'               => 'admin/posts/delete_image',
 
+    'admin/companys/:id'                         => 'admin/companys/read',
+    'admin/companys/update/:id'                  => 'admin/companys/update',
+    'admin/companys/delete/:id'                  => 'admin/companys/delete',
+    'admin/companys/delete_image/:id'            => 'admin/companys/delete_image',
+
     'admin/users/:id'                            => 'admin/users/read',
     'admin/users/update/:id'                     => 'admin/users/update',
+    'admin/users/updateById/:id'                 => 'admin/users/updateById',
+    'admin/users/delete/:id'                     => 'admin/users/delete',
 //    'admin/users/delete/:id'                     => 'admin/posts/delete',
 //    'admin/users/delete_image/:id'               => 'admin/posts/delete_image',
 
     'admin/stores/:id'                           => 'admin/stores/read',
-    'admin/users/update/:id'                     => 'admin/stores/update',
+    'admin/stores/update/:id'                    => 'admin/stores/update',
+    'admin/stores/delete/:id'                    => 'admin/stores/delete',
+    'admin/stores/delete_image/:id'              => 'admin/stores/delete_image',
 
     'weixinauth'                                 => 'index/index/weixin_auth',
-    'weixincallback'                            => 'index/index/weixin_callback'
+    'weixincallback'                             => 'index/index/weixin_callback',
+    'admin/goods/:id'                            => 'admin/goods/read',
+    'admin/goods/qrcode/:id'                     => 'admin/goods/generateQrcode',
+    'admin/goods/qrcode'                         => 'admin/goods/qrcode',
+    'admin/goods/update/:id'                     => 'admin/goods/update',
+    'admin/goods/delete/:id'                     => 'admin/goods/delete',
+    'admin/goods/delete_image/:id'               => 'admin/goods/delete_image',
+
+    'admin/sale_records/add'                      => 'admin/sale_records/add',
+    'admin/sale_records/:id'                            => 'admin/sale_records/read',
+    'admin/sale_records/update/:id'                     => 'admin/sale_records/update',
+    'admin/sale_records/delete/:id'                     => 'admin/sale_records/delete',
 
 ];

@@ -28,6 +28,9 @@ class Stores extends Model
     ];
 
     protected $update = ['updated_at'];
+    // 定义时间戳字段名
+    protected $createTime = 'created_at';
+    protected $updateTime = 'updated_at';
 
     // status属性读取器
 //    protected function getStatusAttr($value)
@@ -35,6 +38,9 @@ class Stores extends Model
 //        $status = [-1 => '删除', 0 => '草稿', 1 => '发布',2 => '待审核'];
 //        return $status[$value];
 //    }
-
+    // 获取实体店
+    public function company() {
+        return $this->belongsTo("companys", 'company_name');
+    }
 }
 

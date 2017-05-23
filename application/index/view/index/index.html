@@ -1,22 +1,140 @@
 <html>
 <head>
-<title>月光石店奖积分系统</title>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>月光石店奖积分系统</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
 </head>
 <body>
-<h1>{$user->name}</h1>
-<form action="/update_info/{$user->id}" method="post">
-	<input type="text" name="name" value="{$user->name ? $user->name : ''}">
-	<input type="text" name="telephone" value="{$user->telephone ? $user->telephone : ''}">
-	<input type="submit" value="保存">
-</form>
+	<div class="page-group">
+        <div class="page page-current">
+        	<!-- 这里是页面内容区 -->
+            <div class="content">
+               	<form action="/admin/users/updateById/{$user->id}" method="post">
+                	<div class="list-block">
+	                	<ul>
+	                		<!-- Text inputs -->
+	                		<li>
+	                		  <div class="item-content">
+	                		    <div class="item-media"><i class="icon icon-form-name"></i></div>
+	                		    <div class="item-inner">
+	                		      <div class="item-title label">姓名</div>
+	                		      <div class="item-input">
+	                		        <input type="text" name="name" placeholder="Your name" value="{$user->name}">
+	                		      </div>
+	                		    </div>
+	                		  </div>
+	                		</li>
+	                		<li>
+	                		  <div class="item-content">
+	                		    <div class="item-media"><i class="icon icon-form-phone"></i></div>
+	                		    <div class="item-inner">
+	                		      <div class="item-title label">手机号</div>
+	                		      <div class="item-input">
+	                		        <input type="text" name="telephone" placeholder="Telephone" value="{$user->telephone}">
+	                		      </div>
+	                		    </div>
+	                		  </div>
+	                		</li>
+	                		<li>
+	                		  <div class="item-content">
+	                		    <div class="item-media"><i class="icon icon-form-company-name"></i></div>
+	                		    <div class="item-inner">
+	                		      <div class="item-title label">公司名</div>
+	                		      <div class="item-input">
+	                		      	<select name="company_name" id="company-name">
+	                		      		{foreach $companys as $ov => $ol }
+			                                <option data-id="{$ov}" value="{$ol}" {if $user->company_name == $ol}selected="selected"{/if}>{$ol}</option>
+			                            {/foreach}
+	                		      	</select>
+	                		      	<!-- <input type="text" name="company_name" placeholder="Company_name" value="{$user->company_name}"> -->
+	                		      </div>
+	                		    </div>
+	                		  </div>
+	                		</li>
+	                		<li>
+	                		  <div class="item-content">
+	                		    <div class="item-media"><i class="icon icon-form-company-name"></i></div>
+	                		    <div class="item-inner">
+	                		      <div class="item-title label">店名</div>
+	                		      <div class="item-input">
+	                		      	<select name="store_id" id="store-name">
+	                		      		<!-- {foreach $stores as $ov => $ol }
+			                                <option value="{$ov}" {if isset($user['store_id']) AND $user['store_id'] == $ov}selected="selected"{/if}>{$ol}</option>
+			                            {/foreach} -->
+	                		      	</select>
+	                		      	<!-- <input type="text" name="company_name" placeholder="Company_name" value="{$user->company_name}"> -->
+	                		      </div>
+	                		    </div>
+	                		  </div>
+	                		</li>
+	                		<!-- <li>
+	                		  <div class="item-content">
+	                		    <div class="item-media"><i class="icon icon-form-company-name"></i></div>
+	                		    <div class="item-inner">
+	                		      <div class="item-title label">店名</div>
+	                		      <div id="selectLocation" class="item-input">
+	                		      	<p>
+                                        <select name="s_province"></select>
+                                        <select name="s_city"></select>
+                                        <select name="s_area"></select>
+                                    </p>
+                                    <input type="hidden" name="province" value="{$user->province ? $user->province : ''}">
+                                    <input type="hidden" name="city" value="{$user->city ? $user->city : ''}">
+                                    <input type="hidden" name="area" value="{$user->area ? $user->area : ''}">
+	                		      </div>
+	                		    </div>
+	                		  </div>
+	                		</li> -->
+	                	</ul>
+            		</div>
+	                <div class="content-block">
+	                    <div class="row">
+	                      <!-- <div class="col-50"><a href="#" class="button button-big button-fill button-danger">取消</a></div> -->
+	                    	<div class="col-50">
+	                    		<button type="submit" class="button button-big button-fill button-success">保存</button>
+	                    	</div>
+		            	</div>
+		            </div>
+                </form>
+                <div class="content-block">
+                	<a href="#" id="saoma" class="button button-fill">扫码</a>
+                </div>
+                <div class="content-block">
+            		<h1>使用说明</h1>
+            		<p>1. 请先完善用户信息（姓名，手机号，公司名，店名），点击保存即可</p>
+            		<p>2. 如果信息填写有误可以重新填写，再次保存即可</p>
+            		<p>3. 确保信息无误，点击扫码，扫描产品上的二维码</p>
+            		<p>4. 一个二维码只能被扫描一次</p>
+            	</div>
+            </div>
+			<!-- <h1>{$user->name}</h1>
+			<form action="/update_info/{$user->id}" method="post">
+				<input type="text" name="name" value="{$user->name ? $user->name : ''}">
+				<input type="text" name="telephone" value="{$user->telephone ? $user->telephone : ''}">
+				<input type="submit" value="保存">
+			</form> -->
+        </div>
+    </div>
 
-<button id="saoma">扫码</button>
 <script>
 	var jsSign = {$jsSign};
+	var stores_map = {$stores_map};
+	var user = {$user};
+	console.log(stores_map);
 	wx.config({
-	    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 	    appId: jsSign.appId, // 必填，公众号的唯一标识
 	    timestamp: jsSign.timestamp, // 必填，生成签名的时间戳
 	    nonceStr: jsSign.nonceStr, // 必填，生成签名的随机串
@@ -26,13 +144,49 @@
 
 	wx.ready(function(){
 	    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-	    window.alert('js sdk 验证成功')
+	    // window.alert('js sdk 验证成功')
 	});
 	// var weixin = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe21837cd367991d&redirect_uri=' + encodeURI('http://yueguangshi.com.cn/home') + '&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
 
 	// var weixin = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&redirect_uri=https%3A%2F%2Fchong.qq.com%2Fphp%2Findex.php%3Fd%3D%26c%3DwxAdapter%26m%3DmobileDeal%26showwxpaytitle%3D1%26vb2ctag%3D4_2030_5_1194_60&response_type=code&scope=snsapi_base&state=123#wechat_redirect';
 	// window.location.href = weixin;
 	$(function() {
+		// $.ajax({
+		// 	url: '/admin/sale_records/add',
+		// 	type: 'post',
+		// 	dataType: 'json',
+		// 	data: {qrcode: "abc123-1494258694-7ab36fa0-bd62-42bb-9b69-768789c22b1d"},
+		// 	success: function (data) {
+		// 		if (data && String(data.code) === '0') {
+		// 			$.toast('销售记录创建成功')
+		// 		} else {
+		// 			$.toast('创建销售记录失败，二维码不可重复扫描')
+		// 		}
+		// 	},
+		// 	error: function (error) {
+		// 		window.alert('ajax error')
+		// 		window.alert(JSON.stringify(error))
+		// 	},
+		// 	complete: function (data) {
+		// 		// window.alert('ajax always')
+		// 		// window.alert(JSON.stringify(data))
+		// 	}
+		// })
+		$('#company-name').on('change', function(event) {
+			// var val = $(this).find('[selected]').data('id');
+			var selectCompany = $(this).find('[value="' + $(this).val() + '"]');
+			var val = selectCompany.data('id');
+			var stores = stores_map[val] ? stores_map[val] : [];
+			var $storesSelect = $('#store-name');
+			$storesSelect.empty();
+			$storesSelect.append('<option value="">请选择</option>');
+			for (var i = 0; i < stores.length; i++) {
+				var store = stores[i];
+				var option = '<option data-id="' + store.id + '" value="' + store.id + '" ' + (( user.store_id == store.id) ? 'selected="selected"' : '') + '>' + store.name + '</option>';
+				$storesSelect.append(option);
+			}
+		}).change();
+
 		$('#saoma').on('click', function(event) {
 			event.preventDefault();
 			wx.scanQRCode({
@@ -40,11 +194,73 @@
 			    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
 			    success: function (res) {
 				    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-				    window.alert(res)
+				    $.ajax({
+				    	url: '/admin/sale_records/add',
+				    	type: 'post',
+				    	dataType: 'json',
+				    	data: {qrcode: result},
+				    	success: function (data) {
+				    		if (data && String(data.code) === '0') {
+				    			$.toast('销售记录创建成功')
+				    		} else {
+				    			if (data && data.msg) {
+				    				$.toast(data.msg)
+				    			} else {
+				    				$.toast('创建销售记录失败，二维码不可重复扫描')
+				    			}
+				    		}
+				    	},
+				    	error: function (error) {
+				    		window.alert('ajax error')
+				    		window.alert(JSON.stringify(error))
+				    	},
+				    	complete: function (data) {
+				    		// window.alert('ajax always')
+				    		// window.alert(JSON.stringify(data))
+				    	}
+				    })
+				},
+				fail: function (error) {
+					// window.alert(JSON.stringify(error))
+				},
+				complete: function (data) {
+					// window.alert(JSON.stringify(data))
 				}
 			});
 		});
+
+		// $.ajax({
+		// 	url: '/admin/saleRecords/add',
+		// 	type: 'post',
+		// 	dataType: 'json',
+		// 	data: {qrcode: 'abc123-149425'},
+		// })
+		// .done(function(data) {
+		// 	window.alert(JSON.stringify(data));
+		// })
+		// .fail(function(error) {
+		// 	window.alert(JSON.stringify(error));
+		// })
+		// .always(function() {
+		// 	console.log("complete");
+		// });
+		
+		$('#selectLocation').citys({
+            provinceField: 's_province',
+            cityField: 's_city',
+            areaField: 's_area',
+            province:'{$user->province ? $user->province : ''}',
+            city:'{$user->city ? $user->city : ''}',
+            area:'{$user->area ? $user->area : ''}',
+            onChange: function (info) {
+                $('input[name=province]').val(info.province);
+                $('input[name=city]').val(info.city);
+                $('input[name=area]').val(info.area);
+            }
+        });
 	})
+
+	$.init();
 </script>
 
 </body>

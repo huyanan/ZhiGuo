@@ -28,6 +28,9 @@ class Goods extends Model
     ];
 
     protected $update = ['updated_at'];
+    // 定义时间戳字段名
+    protected $createTime = 'created_at';
+    protected $updateTime = 'updated_at';
 
     // status属性读取器
 //    protected function getStatusAttr($value)

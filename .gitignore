@@ -3,5 +3,6 @@ composer.lock
 *.log
 thinkphp
 vendor
+tmp
 sftp-config.json
 _gsdata_

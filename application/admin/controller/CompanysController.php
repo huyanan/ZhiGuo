@@ -12,13 +12,13 @@ use app\admin\model\Stores;
 use app\admin\model\Companys;
 
 //权限认证
-class StoresController extends Controller {
+class CompanysController extends AdminAuth {
 
     //模块基本信息
     private $data = array(
-        'module_name' => '实体店',
-        'module_url'  => '/admin/stores/',
-        'module_slug' => 'stores',
+        'module_name' => '客户',
+        'module_url'  => '/admin/companys/',
+        'module_slug' => 'companys',
         'upload_path' => UPLOAD_PATH,
         'upload_url'  => '/public/uploads/',
         'ckeditor'    => array(
@@ -41,7 +41,7 @@ class StoresController extends Controller {
 
 
     /**
-     * [index 获取文章数据列表]
+     * [index 获取客户数据列表]
      * @return [type] [description]
      */
     public function index()
@@ -52,10 +52,10 @@ class StoresController extends Controller {
         *   或者可以取消属性读取器，用关联查询，但是由于没有设置属性读取器，
         *   在 create/read 页面,select/checkbox/radio字段默认值判断时不对，需要单独设置默认值
         */
-        // $list =  Posts::view('posts','*')
-        //                 ->view('administrator',['nickname'],'posts.post_author=administrator.id') //这里本人对关联查询写法不熟，手册中关联查询部分没有完整实例，试了几种方法（join(),model定义关联），最后用view写
-        //                 ->where('posts.status','>=','0')
-        //                 ->order('posts.create_time', 'DESC')
+        // $list =  Companys::view('companys','*')
+        //                 ->view('administrator',['nickname'],'companys.post_author=administrator.id') //这里本人对关联查询写法不熟，手册中关联查询部分没有完整实例，试了几种方法（join(),model定义关联），最后用view写
+        //                 ->where('companys.status','>=','0')
+        //                 ->order('companys.create_time', 'DESC')
         //                 ->paginate();
 
         //直接查询,注：getPostAuthorAttr 中已经得到了 post_author 名称
@@ -70,18 +70,10 @@ class StoresController extends Controller {
             if(isset($param['name'])){
                 $map['name'] = ['like','%'.$param['name'].'%'];
             }
-
-            if(isset($param['province'])){
-                $map['province'] = ['like','%'.$param['province'].'%'];
-            }
-
-            if(isset($param['city'])){
-                $map['city'] = ['like','%'.$param['city'].'%'];
-            }
         }
 
 
-        $list =  Stores::where($map)
+        $list =  Companys::where($map)
             ->order('created_at', 'DESC')
             ->paginate();
 
@@ -90,32 +82,15 @@ class StoresController extends Controller {
         return $this->fetch();
     }
 
-    // 根据公司返回实体店
-    public function getStoresByCompany($company_name='') {
-        $query = Stores::where('id', '<>', -1);
-        if ($company_id) {
-            $query->where('company_name', $company_name);
-        }
-        $stores = $query->select();
-        return [
-            'code' => 0,
-            'data' => $stores
-        ];
-    }
-
     /**
-     * [create 创建文章数据页面]
+     * [create 创建客户数据页面]
      * @return [type] [description]
      */
     public function create()
     {
 //        $admins = Administrator::where('status',1)->column('nickname','id');
-        $companys = Companys::where('id', '<>', -1)->column('name', 'id');
         $this->data['edit_fields'] = array(
-            'name'     => array('type' => 'text', 'label' => '店名'),
-            'company_name'    => array('type' => 'select', 'label' => '公司名','default' => $companys, 'extra'=>array('wrapper'=>'col-sm-4')),
-            // 'province'     => array('type' => 'text', 'label' => '省'),
-            // 'city'     => array('type' => 'text', 'label' => '市'),
+            'name'     => array('type' => 'text', 'label' => '公司名'),
         );
 
         //默认值设置
@@ -127,19 +102,16 @@ class StoresController extends Controller {
     }
 
     /**
-     * [add 新增文章数据ACTION，create()页面表单数据提交到这里]
+     * [add 新增客户数据ACTION，create()页面表单数据提交到这里]
      * @return [type] [description]
      */
     public function add()
     {
-        $stores = new Stores;
+        $companys = new Companys;
         $data = input('post.');
 
         $rule = [
-            'name|店名' => 'require',
-            'company_name|公司名' => 'require',
-            'province|省' => 'require',
-            'city|市' => 'require',
+            'name|公司名' => 'require',
         ];
         // 数据验证
         $validate = new Validate($rule);
@@ -151,42 +123,28 @@ class StoresController extends Controller {
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
 
-        if (isset($data['s_province'])) {
-            unset($data['s_province']);
-        }
-        if (isset($data['s_city'])) {
-            unset($data['s_city']);
-        }
-        if (isset($data['s_area'])) {
-            unset($data['s_area']);
-        }
-        if ($id = $stores->validate(true)->insertGetId($data)) {
-            return $this->success('实体店添加成功',$this->data['module_url']);
+        if ($id = $companys->validate(true)->insertGetId($data)) {
+            return $this->success('客户添加成功',$this->data['module_url']);
         } else {
-            return $this->error($stores->getError());
+            return $this->error($companys->getError());
         }
     }
 
     /**
-     * [read 读取文章数据]
-     * @param  string $id [文章ID]
+     * [read 读取客户数据]
+     * @param  string $id [客户ID]
      * @return [type]     [description]
      */
     public function read($id='')
     {
-        $companys = Companys::where('id', '<>', -1)->column('name', 'id');
         $this->data['edit_fields'] = array(
-            'name'           => array('type' => 'text', 'label' => '店名'),
-            'company_name'    => array('type' => 'select', 'label' => '公司名','default' => $companys, 'extra'=>array('wrapper'=>'col-sm-4')),
-            // 'province'       => array('type' => 'text', 'label' => '省'),
-            // 'city'           => array('type' => 'text', 'label' => '市'),
-            // 'area'           => array('type' => 'text', 'label' => '区'),
+            'name'           => array('type' => 'text', 'label' => '公司名'),
             'created_at'    => array('type' => 'text', 'label' => '发布时间','class'=>'datepicker','extra'=>array('data'=>array('format'=>'YYYY-MM-DD hh:mm:ss'),'wrapper'=>'col-sm-4')),
             'updated_at'    => array('type' => 'text', 'label' => '更新时间','disabled'=>true, 'extra'=>array('wrapper'=>'col-sm-4')),
         );
 
         //默认值设置
-        $item = Stores::get($id);
+        $item = Companys::get($id);
 //        $item['post_content'] = str_replace('&', '&amp;', $item['post_content']);
 
         $this->assign('item',$item);
@@ -202,7 +160,7 @@ class StoresController extends Controller {
      */
     public function update($id)
     {
-        $stores = new Stores;
+        $companys = new Companys;
         $data = input('post.');
 
         $rule = [
@@ -219,19 +177,11 @@ class StoresController extends Controller {
         }
 
         $data['id'] = $id;
-        if (isset($data['s_province'])) {
-            unset($data['s_province']);
-        }
-        if (isset($data['s_city'])) {
-            unset($data['s_city']);
-        }
-        if (isset($data['s_area'])) {
-            unset($data['s_area']);
-        }
-        if ($stores->update($data)) {
+
+        if ($companys->update($data)) {
             return $this->success('信息更新成功',$this->data['module_url']);
         } else {
-            return $stores->getError();
+            return $companys->getError();
         }
     }
 
@@ -243,10 +193,10 @@ class StoresController extends Controller {
     public function delete($id)
     {
         // 真.删除，不想用伪删除，请用这段(TODO：增加回收站功能用，在回收站清空时用真删除)
-        $stores = Stores::get($id);
-        if ($stores) {
-            $stores->delete();
-            $data['id'] = $stores->id;
+        $companys = Companys::get($id);
+        if ($companys) {
+            $companys->delete();
+            $data['id'] = $companys->id;
             $data['error'] = 0;
          $data['msg'] = '删除成功';
         } else {

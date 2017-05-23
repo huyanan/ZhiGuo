@@ -62,7 +62,7 @@ class IndexController extends AdminAuth
             $expire_time = time()+config('auth_expired_time');
             $user->where($where_query)->update(['last_login_ip' => $ip, 'last_login_time' => $time,'expire_time'=>$expire_time]);
 
-            return $this->success('登录成功', '/admin');
+            return $this->success('登录成功', '/admin', '', 1);
         } else {
             $this->error('登录失败:账号或密码错误');
         }

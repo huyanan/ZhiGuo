@@ -20,7 +20,10 @@
         "topthink/framework": "*",
         "topthink/think-angular": "^1.0",
         "topthink/think-queue": "dev-master",
-        "topthink/think-image": "^1.0"
+        "topthink/think-image": "^1.0",
+        "aferrandini/phpqrcode": "1.0.1",
+        "comodojo/zip": "^2.1",
+        "tecnickcom/tcpdf": "^6.2"
     },
     "extra": {
         "think-path": "thinkphp"

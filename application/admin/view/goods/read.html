@@ -16,7 +16,7 @@
                         <a href="{:url('/module_url')}">{$data.module_name}</a>
                     </li>
                     <li>
-                        新增{$data.module_name}
+                        编辑{$data.module_name}
                     </li>
 
                 </ul>
@@ -31,7 +31,7 @@
 
             <div class="add-nav">
                 <div class="nav-heading">
-                    <h3>新增{$data.module_name}</h3>
+                    <h3>编辑{$data.module_name}</h3>
                     <span class="controls pull-right">
                         <a href="{:url($data.module_url)}" class="btn btn-ef btn-ef-1 btn-ef-1-default btn-ef-1a btn-rounded-20 mr-5" data-toggle="tooltip" title="返回"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
                     </span>
@@ -48,7 +48,7 @@
 
                             <!-- tile header -->
                             <div class="tile-header dvd dvd-btm">
-                                <h1 class="custom-font"><strong>新增 </strong> 基本信息</h1>
+                                <h1 class="custom-font"><strong>编辑 </strong> 基本信息</h1>
                             </div>
                             <!-- /tile header -->
 
@@ -57,20 +57,10 @@
                             <!-- tile body -->
                             <div class="tile-body">
 
-                                <form role="form" enctype="multipart/form-data" action="{:url($data.module_url).'add'}" method="post">
+                                <form role="form" enctype="multipart/form-data" action="{:url($data.module_url).'update/'}{$item.id}" method="post">
                                     {include file="custom-fields" /}
-                                    <div id="selectLocation">
-                                        <p>
-                                            <select name="s_province"></select>
-                                            <select name="s_city"></select>
-                                            <select name="s_area"></select>
-                                        </p>
-                                    </div>
-                                    <input type="hidden" name="province">
-                                    <input type="hidden" name="city">
-                                    <input type="hidden" name="area">
                                     <button class="btn btn-lg btn-primary" type="submit"><i class="glyphicon glyphicon-ok"></i>&nbsp;提交</button>
-                                </form>
+                    			</form>
 
                             </div>
                             <!-- /tile body -->
@@ -86,20 +76,6 @@
         </div>
 
     </div>
-    <script>
-        $('#selectLocation').citys({
-            provinceField: 's_province',
-            cityField: 's_city',
-            areaField: 's_area',
-            province:'{$item->province ? $item->province : ''}',
-            city:'{$item->city ? $item->city : ''}',
-            area:'{$item->area ? $item->area : ''}',
-            onChange: function (info) {
-                $('input[name=province]').val(info.province);
-                $('input[name=city]').val(info.city);
-                $('input[name=area]').val(info.area);
-            }
-        });
-    </script>
+
 </section>
 <!--/ CONTENT -->
