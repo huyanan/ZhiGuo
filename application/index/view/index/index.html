@@ -54,6 +54,7 @@
 	                		      <div class="item-title label">公司名</div>
 	                		      <div class="item-input">
 	                		      	<select name="company_name" id="company-name">
+	                		      		<option value="">请选择</option>
 	                		      		{foreach $companys as $ov => $ol }
 			                                <option data-id="{$ov}" value="{$ol}" {if $user->company_name == $ol}selected="selected"{/if}>{$ol}</option>
 			                            {/foreach}

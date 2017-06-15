@@ -42,9 +42,36 @@
 
                             <form role="form" enctype="multipart/form-data" action="{:url($data.module_url)}" method="GET">
                                 <div class="row">
-                                    <div class="col-sm-3"><input class="form-control" name="title" value="{if (isset($data['search']) AND isset($data['search']['title']) )}{$data['search']['title']}{/if}" placeholder="文章标题"></div>
-                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD" name="start_time" value="{if (isset($data['search']) AND isset($data['search']['start_time']) )}{$data['search']['start_time']}{/if}" placeholder="创建日期起始时间"></div>
-                                    <div class="col-sm-3"><input class="form-control datepicker" data-format="YYYY-MM-DD" name="end_time" value="{if (isset($data['search']) AND isset($data['search']['end_time']) )}{$data['search']['end_time']}{/if}" placeholder="创建日期结束时间"></div>
+                                    <div class="col-sm-3 form-group">
+                                        <label>公司名</label>
+
+                                        <select id="company-name" name="company_name"
+                                            class="form-control" style="max-width: 300px;">
+                                                <option value="">请选择</option>
+                                                {foreach $companys as $ov => $ol }
+                                                    <option data-id="{$ov}" value="{$ol}" {if isset($data['search']['company_name']) AND $data['search']['company_name'] == $ol}selected="selected"{/if}>{$ol}</option>
+                                                {/foreach}
+                                        </select>
+
+                                    </div>
+                                    <div class="col-sm-3 form-group">
+                                        <label>店面名</label>
+
+                                        <select id="store-id" name="store_id"
+                                            class="form-control" style="max-width: 300px;">
+
+                                                <!-- {foreach $companys as $ov => $ol }
+                                                    <option value="{$ol}" {if isset($item['company_name']) AND $item['company_name'] == $ol}selected="selected"{/if}>{$ol}</option>
+                                                {/foreach} -->
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><input class="form-control" name="name" value="{if (isset($data['search']) AND isset($data['search']['name']) )}{$data['search']['name']}{/if}" placeholder="销售员姓名"></div>
+                                    <div class="col-sm-3"><input class="form-control" name="telephone" value="{if (isset($data['search']) AND isset($data['search']['telephone']) )}{$data['search']['telephone']}{/if}" placeholder="销售员手机号"></div>
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-3"><button class="btn btn-info btn-block" type="submit">提交</button></div>
                                 </div>
                             </form>
@@ -144,6 +171,23 @@
         </div>
         <!-- /page content -->
         <script type="text/javascript">
+            var stores_map = {$stores_map};
+            console.log(stores_map);
+            var data_json = {$data_json};
+            $('#company-name').on('change', function(event) {
+                // var val = $(this).find('[selected]').data('id');
+                var selectCompany = $(this).find('[value="' + $(this).val() + '"]');
+                var val = selectCompany.data('id');
+                var stores = stores_map[val] ? stores_map[val] : [];
+                var $storesSelect = $('#store-id');
+                $storesSelect.empty();
+                $storesSelect.append('<option value="">请选择</option>');
+                for (var i = 0; i < stores.length; i++) {
+                    var store = stores[i];
+                    var option = '<option data-id="' + store.id + '" value="' + store.id + '" ' + (((data_json['search']) && ( data_json['search']['store_id'] == store.id)) ? 'selected="selected"' : '') + '>' + store.name + '</option>';
+                    $storesSelect.append(option);
+                }
+            }).change();
             function deleteData(id){
                 $.ajax({
                     type:"POST",

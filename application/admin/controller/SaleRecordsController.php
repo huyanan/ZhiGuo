@@ -66,7 +66,15 @@ class SaleRecordsController extends Controller
         $map = [];
 
         $companys = Companys::where('id', '<>', '-1')->column('name', 'id');
-            $stores = Stores::where('id', '<>', '-1')->column('name', 'id');
+            // $stores = Stores::where('id', '<>', '-1')->column('name', 'id');
+        $stores = Stores::where('id', '<>', '-1')->select();
+        $stores_map = [];
+        foreach ($stores as $skey => $store) {
+            if (!isset($stores_map[$store->company_name])) {
+                $stores_map[$store->company_name] = [];
+            }
+            $stores_map[$store->company_name][] = $store;
+        }
         if(!empty($param)){
             $this->data['search'] = $param;
             if(isset($param['company_name'])){
@@ -121,9 +129,11 @@ class SaleRecordsController extends Controller
         // }
 
         $this->assign('data',$this->data);
+        $this->assign('data_json', json_encode($this->data));
         $this->assign('list',$list);
         $this->assign('companys',$companys);
         $this->assign('stores',$stores);
+        $this->assign('stores_map',json_encode($stores_map));
         return $this->fetch();
     }
 

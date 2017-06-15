@@ -11,6 +11,7 @@
 
 // 应用公共文件
 use wechat\TPWechat;
+use app\admin\model\Users;
 
 
 /**
@@ -173,7 +174,14 @@ function is_login() {
 	// var_dump(session('w_uid'));
 	// exit;
 	// return isset(session('w_uid')) &&  intval(session('w_uid')) > 0;
-	return session('?w_uid');
+    $uid = session('w_uid');
+    if ($uid) {
+        $user = Users::get(['weixin_openid' => $uid]);
+        if ($user) {
+            return true;
+        }
+    }
+	return false;
 }
 
 // 获取wechat

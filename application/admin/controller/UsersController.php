@@ -65,13 +65,23 @@ class UsersController extends Controller {
 
 //        $map['status'] = ['>=','0'];
         $map = [];
-
+        $companys = Companys::where('id', '<>', '-1')->column('name', 'id');
+            $stores = Stores::where('id', '<>', '-1')->select();
+        $stores_map = [];
+        foreach ($stores as $skey => $store) {
+            if (!isset($stores_map[$store->company_name])) {
+                $stores_map[$store->company_name] = [];
+            }
+            $stores_map[$store->company_name][] = $store;
+        }
         if(!empty($param)){
             $this->data['search'] = $param;
+            if(isset($param['company_name'])){
+                $map['company_name'] = ['like','%'.$param['company_name'].'%'];
+            }
             if(isset($param['name'])){
                 $map['name'] = ['like','%'.$param['name'].'%'];
             }
-
             if(isset($param['telephone'])){
                 $map['telephone'] = ['like','%'.$param['telephone'].'%'];
             }
@@ -95,7 +105,11 @@ class UsersController extends Controller {
             ->paginate();
 
         $this->assign('data',$this->data);
+        $this->assign('data_json', json_encode($this->data));
         $this->assign('list',$list);
+        $this->assign('companys',$companys);
+        $this->assign('stores',$stores);
+        $this->assign('stores_map', json_encode($stores_map));
         return $this->fetch();
     }
 

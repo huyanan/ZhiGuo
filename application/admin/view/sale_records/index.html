@@ -45,11 +45,11 @@
                                     <div class="col-sm-3 form-group">
                                         <label>公司名</label>
 
-                                        <select  name="company_name"
+                                        <select id="company-name" name="company_name"
                                             class="form-control" style="max-width: 300px;">
                                                 <option value="">请选择</option>
                                                 {foreach $companys as $ov => $ol }
-                                                    <option value="{$ol}" {if isset($data['search']['company_name']) AND $data['search']['company_name'] == $ol}selected="selected"{/if}>{$ol}</option>
+                                                    <option data-id="{$ov}" value="{$ol}" {if isset($data['search']['company_name']) AND $data['search']['company_name'] == $ol}selected="selected"{/if}>{$ol}</option>
                                                 {/foreach}
                                         </select>
 
@@ -57,12 +57,12 @@
                                     <div class="col-sm-3 form-group">
                                         <label>店面名</label>
 
-                                        <select  name="store_name"
+                                        <select id="store-name" name="store_name"
                                             class="form-control" style="max-width: 300px;">
                                                 <option value="">请选择</option>
-                                                {foreach $stores as $ov => $ol }
+                                                <!-- {foreach $stores as $ov => $ol }
                                                     <option value="{$ol}" {if isset($data['search']['store_name']) AND $data['search']['store_name'] == $ol}selected="selected"{/if}>{$ol}</option>
-                                                {/foreach}
+                                                {/foreach} -->
                                         </select>
 
                                     </div>
@@ -186,6 +186,24 @@
         </div>
         <!-- /page content -->
         <script type="text/javascript">
+            var stores_map = {$stores_map};
+            console.log(stores_map);
+            var data_json = {$data_json};
+            console.log(data_json);
+            $('#company-name').on('change', function(event) {
+                // var val = $(this).find('[selected]').data('id');
+                var selectCompany = $(this).find('[value="' + $(this).val() + '"]');
+                var val = selectCompany.data('id');
+                var stores = stores_map[val] ? stores_map[val] : [];
+                var $storesSelect = $('#store-name');
+                $storesSelect.empty();
+                $storesSelect.append('<option value="">请选择</option>');
+                for (var i = 0; i < stores.length; i++) {
+                    var store = stores[i];
+                    var option = '<option data-id="' + store.id + '" value="' + store.name + '" ' + (((data_json['search']) && ( data_json['search']['store_name'] == store.name)) ? 'selected="selected"' : '') + '>' + store.name + '</option>';
+                    $storesSelect.append(option);
+                }
+            }).change();
             function deleteData(id){
                 $.ajax({
                     type:"POST",
