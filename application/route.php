@@ -66,5 +66,6 @@ return [
     'admin/sale_records/:id'                            => 'admin/sale_records/read',
     'admin/sale_records/update/:id'                     => 'admin/sale_records/update',
     'admin/sale_records/delete/:id'                     => 'admin/sale_records/delete',
+    'admin/sale_records/exchange/:id'            => 'admin/sale_records/exchange'
 
 ];

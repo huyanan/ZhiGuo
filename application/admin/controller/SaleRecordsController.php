@@ -294,6 +294,7 @@ class SaleRecordsController extends Controller
             'goods_name'         => array('type' => 'text', 'label' => '货物名称'),
             'goods_type'         => array('type' => 'text', 'label' => '货物型号'),
             'goods_number'         => array('type' => 'text', 'label' => '货物编号'),
+            'exchange_status'       => array('type' => 'select', 'label' => '兑换积分', 'default' => [ 1 => '已兑换', 0 => '未兑换' ])
             // 'company_name'    => array('type' => 'select', 'label' => '公司名','default' => $companys, 'extra'=>array('wrapper'=>'col-sm-4')),
             // 'store_name'         => array('type' => 'select', 'label' => '店面名','default' => $stores, 'extra'=>array('wrapper'=>'col-sm-4')),
         );
@@ -344,7 +345,7 @@ class SaleRecordsController extends Controller
         $data['id'] = $id;
 
         if ($saleRecords->update($data)) {
-            return $this->success('信息更新成功',$this->data['module_url'].$id);
+            return $this->success('信息更新成功',$this->data['module_url']);
         } else {
             return $saleRecords->getError();
         }
@@ -404,6 +405,50 @@ class SaleRecordsController extends Controller
             return false;
         }
     }
+
+
+    /**
+     * 兑换积分
+     */
+    public function exchange ($id) {
+        $saleRecords = new SaleRecords;
+        $data = input('post.');
+
+        // $rule = [
+        //     //字段验证
+        //     'owner_id|销售员ID' => 'require',
+        //     'name|销售员姓名' => 'require',
+        //     'telephone|销售员手机号' => 'require',
+        //     'qrcode|二维码/条形码' => 'require',
+        //     // 'goods_name|货物名称' => 'require',
+        //     // 'goods_type|货物型号' => 'require',
+        //     'goods_number|货物编号' => 'require',
+        //     'company_name|公司名' => 'require',
+        //     'store_name|店面名' => 'require',
+        // ];
+        $msg = [];
+
+        // 数据验证
+        // $validate = new Validate($rule,$msg);
+        // $result   = $validate->check($data);
+        // if(!$result){
+        //     return  $validate->getError();
+        // }
+
+        $data['id'] = $id;
+        $data['exchange_status'] = 1;
+
+        if ($saleRecords->update($data)) {
+            // return $this->success('信息更新成功',$this->data['module_url'].$id);
+            return [
+                'code' => 0,
+                'msg' => '兑换积分成功！'
+            ];
+        } else {
+            return $saleRecords->getError();
+        }
+    }
+
 
     /**
      * [delete 删除文章数据(伪删除)]

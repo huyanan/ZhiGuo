@@ -127,8 +127,9 @@
                                         <th>货物编号</th>
                                         <th>公司名</th>
                                         <th>店名</th>
-                                        <th>省</th>
-                                        <th>市</th>
+                                        <th>兑换积分</th>
+                                        <!-- <th>省</th> -->
+                                        <!-- <th>市</th> -->
                                         <th>创建时间</th>
                                         <!--<th>更新时间</th>-->
                                         <!--<th>操作</th>-->
@@ -147,14 +148,19 @@
                                         <td>{$item->goods_number}</td>
                                         <td>{$item->company_name}</td>
                                         <td>{$item->store_name}</td>
-                                        <td>{$item->province}</td>
-                                        <td>{$item->city}</td>
+                                        <td class="exchange-status">{$item->exchange_status}</td>
+                                        <!-- <td>{$item->province}</td> -->
+                                        <!-- <td>{$item->city}</td> -->
                                         <td>{$item->created_at}</td>
                                         <td>
 
                                             <a class="btn btn-info" href="{:url($data.module_url.$item->id)}">
                                                 <i class="glyphicon glyphicon-edit icon-white"></i>
                                                 编辑
+                                            </a>
+                                            <a class="btn btn-success btn-exchange {$item->getData('exchange_status')==1 ? 'hidden' : ''}" href="javascript:;" data-id="{$item->id}">
+                                                <i class="glyphicon glyphicon-edit icon-white"></i>
+                                                兑换积分
                                             </a>
                                             <a class="btn btn-danger" href="javascript:;"  onclick="if(confirm('确定要删除该销售记录吗')){ deleteData({$item->id})}">
                                                 <i class="glyphicon glyphicon-trash icon-white"></i>
@@ -204,6 +210,12 @@
                     $storesSelect.append(option);
                 }
             }).change();
+
+            $('.btn-exchange').on('click', function (event) {
+                event.preventDefault()
+                var id = $(this).data('id');
+                exchange(id);
+            });
             function deleteData(id){
                 $.ajax({
                     type:"POST",
@@ -227,6 +239,27 @@
                     success:function(data){
                         if(data.error == 0){
                             $('#tr_'+data.id+' .expire_time').html(data.expire_time);
+                        }
+                        $('.alert').html(data.msg).show();
+                        setTimeout(function() {
+                            $('.alert').hide();
+                        }, 3000);
+                    }
+                });
+            }
+
+            /**
+             * 兑换积分接口
+             */
+            function exchange (id) {
+                $.ajax({
+                    type:"POST",
+                    url:"{:url($data.module_url.'exchange')}/"+id,
+                    success:function(data){
+                        if(data.code == 0){
+                            // $('#tr_'+id+' .expire_time').html(data.expire_time);
+                            $('#tr_' + id + ' ' + '.exchange-status').html('已完成');
+                            $('#tr_' + id + ' ' + '.btn-exchange').hide();
                         }
                         $('.alert').html(data.msg).show();
                         setTimeout(function() {

@@ -21,7 +21,7 @@
         <div class="page page-current">
         	<!-- 这里是页面内容区 -->
             <div class="content">
-               	<form action="/admin/users/updateById/{$user->id}" method="post">
+               	<form id="userInfoForm" action="/admin/users/updateById/{$user->id}" method="post">
                 	<div class="list-block">
 	                	<ul>
 	                		<!-- Text inputs -->
@@ -103,14 +103,14 @@
 	                <div class="content-block">
 	                    <div class="row">
 	                      <!-- <div class="col-50"><a href="#" class="button button-big button-fill button-danger">取消</a></div> -->
-	                    	<div class="col-50">
-	                    		<button type="submit" class="button button-big button-fill button-success">保存</button>
+	                    	<div class="col-100">
+	                    		<a href="javascript:;" id="saveUserInfo" type="submit" class="button button-big button-fill button-success">保存</a>
 	                    	</div>
 		            	</div>
 		            </div>
                 </form>
                 <div class="content-block">
-                	<a href="#" id="saoma" class="button button-fill">扫码</a>
+                	<a href="#" id="saoma" class="button button-big button-fill">开始扫码</a>
                 </div>
                 <div class="content-block">
             		<h1>使用说明</h1>
@@ -173,6 +173,9 @@
 		// 		// window.alert(JSON.stringify(data))
 		// 	}
 		// })
+		$('#saveUserInfo').on('click', function () {
+			$('#userInfoForm').submit();
+		});
 		$('#company-name').on('change', function(event) {
 			// var val = $(this).find('[selected]').data('id');
 			var selectCompany = $(this).find('[value="' + $(this).val() + '"]');
@@ -202,12 +205,12 @@
 				    	data: {qrcode: result},
 				    	success: function (data) {
 				    		if (data && String(data.code) === '0') {
-				    			$.toast('销售记录创建成功')
+				    			$.toast('销售记录创建成功', 5000)
 				    		} else {
 				    			if (data && data.msg) {
-				    				$.toast(data.msg)
+				    				$.toast(data.msg, 5000)
 				    			} else {
-				    				$.toast('创建销售记录失败，二维码不可重复扫描')
+				    				$.toast('创建销售记录失败，二维码不可重复扫描', 5000)
 				    			}
 				    		}
 				    	},

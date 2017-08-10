@@ -31,6 +31,10 @@ class SaleRecords extends Model
     protected $updateTime = 'updated_at';
     protected $update = ['updated_at'];
 
+    protected function getExchangeStatusAttr($value) {
+        $status = [ 0 => '未兑换', 1 => '已兑换'];
+        return $status[$value];
+    }
     // status属性读取器
 //    protected function getStatusAttr($value)
 //    {
